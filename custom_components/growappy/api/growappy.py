@@ -38,14 +38,14 @@ class GROWAPPY:
         except aiohttp.ClientError as err:
             _LOGGER.error(err)
 
-    async def refreshToken(self, token) -> Token:
+    async def refreshToken(self, refresh_token) -> Token:
         """Issue REFRESH TOKEN request."""
         try:
             _LOGGER.debug("Refreshing token...")
             async with self.websession.post(
                 API_LOGIN_REFRESH_URL,
                 headers = { "Content-Type": "application/json" },
-                json={"refresh":token.refresh}
+                json={"refresh":refresh_token}
             ) as res:
                 if res.status == 200 and res.content_type == "application/json":
                     json = await res.json()
@@ -55,7 +55,7 @@ class GROWAPPY:
         except aiohttp.ClientError as err:
             _LOGGER.error(err)
 
-    async def getStudents(self, token) -> list[Student]:
+    async def getStudents(self, access_token) -> list[Student]:
         """Issue STUDENTS requests."""
         try:
             _LOGGER.debug("Getting list of active students...")
@@ -63,7 +63,7 @@ class GROWAPPY:
                 API_LIST_STUDENTS_URL, 
                 headers = { 
                     "Content-Type": "application/json",
-                    "Authorization": f"Bearer {token.access}" }
+                    "Authorization": f"Bearer {access_token}" }
             ) as res:
                 if res.status == 200 and res.content_type == "application/json":
                     json = await res.json()
@@ -73,7 +73,7 @@ class GROWAPPY:
         except aiohttp.ClientError as err:
             _LOGGER.error(err)
 
-    async def getDiary(self, token, studentId, startDate, endDate) -> list[Metric]:
+    async def getDiary(self, access_token, studentId, startDate, endDate) -> list[Metric]:
         """Issue DIARY request."""
         try:
             _LOGGER.debug("Getting diary for student {}...".format(studentId))
@@ -81,7 +81,7 @@ class GROWAPPY:
                 API_DIARY_URL.format(startDate, endDate, studentId), 
                 headers = { 
                     "Content-Type": "application/json",
-                    "Authorization": f"Bearer {token.access}" }
+                    "Authorization": f"Bearer {access_token}" }
             ) as res:
                 if res.status == 200 and res.content_type == "application/json":
                     json = await res.json()

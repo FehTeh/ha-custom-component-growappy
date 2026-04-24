@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "domain": "growappy",
     "name": "Growappy Integration",
     "documentation": "https://github.com/fehteh/ha-custom-component-growappy/blob/main/README.md",

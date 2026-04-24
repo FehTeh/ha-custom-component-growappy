@@ -23,14 +23,14 @@ async def main():
             print ("Refresh Token:", token.refresh)
         
         if (token):
-            students = await api.getStudents(token)
+            students = await api.getStudents(token.access)
             for student in students:
                 print ("  Student Id........:", student.id)
                 print ("  Student Name....:", student.name)
                 print ("  Student Full Name....:", student.full_name)
                 print ("  Student Status....:", student.status)
 
-                metrics = await api.getDiary(token, student.id, "2026-04-24", "2026-04-24")
+                metrics = await api.getDiary(token.access, student.id, "2026-04-24", "2026-04-24")
                 for metric in metrics:
                     print ("    Metric Type......:", metric.type)
                     print ("    Metric State.....:", metric.state)

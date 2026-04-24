@@ -33,7 +33,7 @@ async def async_setup_entry(hass: HomeAssistant,
     config = config_entry.data
 
     # TODO check token refresh
-    token = config["access"]
+    token = config["access_token"]
 
     students = await api.getStudents(token)
     sensors = [GrowappyStudentBinarySensor(student, api, config) for student in students]
@@ -84,7 +84,7 @@ class GrowappyStudentBinarySensor(BinarySensorEntity):
             today = datetime.now().strftime("%Y-%m-%d")
             
             # TODO check token refresh
-            token = self._config["access"]
+            token = self._config["access_token"]
             
             metrics = await self._api.getDiary(token, self._student.id, today, today)
             

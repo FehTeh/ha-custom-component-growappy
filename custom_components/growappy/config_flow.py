@@ -44,8 +44,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 return self.async_create_entry(
                     title="Growappy " + user_input["username"], 
                     data={
-                        "access": token.access,
-                        "refresh": token.refresh
+                        "access_token": token.access,
+                        "refresh_token": token.refresh
                     })
             else:
                 errors = {"base": "auth"}
