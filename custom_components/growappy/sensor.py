@@ -16,7 +16,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api.growappy import GROWAPPY
-from .api.student import STUDENT
+from .api.student import Student
 from .const import DOMAIN, DEFAULT_ICON, ATTRIBUTION
 
 _LOGGER = logging.getLogger(__name__)
@@ -43,7 +43,7 @@ async def async_setup_entry(hass: HomeAssistant,
 class GrowappyStudentBinarySensor(BinarySensorEntity):
     """Representation of a student as a Binary Sensor (Presence)."""
 
-    def __init__(self, student: STUDENT, api: GROWAPPY, config: Any):
+    def __init__(self, student: Student, api: GROWAPPY, config: Any):
         """Initialize the binary sensor."""
         super().__init__()
         self._student = student
@@ -84,7 +84,7 @@ class GrowappyStudentBinarySensor(BinarySensorEntity):
             today = datetime.now().strftime("%Y-%m-%d")
             
             # TODO check token refresh
-            token = config["access"]
+            token = self._config["access"]
             
             metrics = await self._api.getDiary(token, self._student.id, today, today)
             
