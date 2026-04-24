@@ -5,10 +5,8 @@
     "documentation": "https://github.com/fehteh/ha-custom-component-growappy/blob/main/README.md",
     "issue_tracker": "https://github.com/fehteh/ha-custom-component-growappy/issues",
     "iot_class": "cloud_polling",
-    "requirements": ["aiohttp==3.11.11"],    
+    "requirements": [],    
     "dependencies": [],
-    "codeowners": [
-        "@fehteh"
-    ],
+    "codeowners": ["@fehteh"],
     "config_flow": true
 }
