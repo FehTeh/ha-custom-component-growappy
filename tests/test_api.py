@@ -1,6 +1,16 @@
 import asyncio
 import aiohttp
-import test_config
+import sys
+
+from tests import test_config
+from unittest.mock import MagicMock
+
+mock_ha = MagicMock()
+sys.modules["homeassistant"] = mock_ha
+sys.modules["homeassistant.core"] = mock_ha
+sys.modules["homeassistant.config_entries"] = mock_ha
+sys.modules["homeassistant.helpers"] = mock_ha
+sys.modules["homeassistant.helpers.typing"] = mock_ha
 
 from custom_components.growappy.api.growappy import GROWAPPY
 from custom_components.growappy.api.token import Token
@@ -11,16 +21,14 @@ async def main():
 
         if (test_config.API_ACCESS_TOKEN and test_config.API_REFRESH_TOKEN):
             print ("Using existing tokens from config...")
-            token = Token({
-                "access": test_config.API_ACCESS_TOKEN,
-                "refresh": test_config.API_REFRESH_TOKEN
-            })
+            token = await api.refreshToken(test_config.API_ACCESS_TOKEN, test_config.API_REFRESH_TOKEN)
         else:
             username = test_config.API_USERNAME
             password = test_config.API_PASSWORD
             token = await api.login(username, password)
-            print ("Access Token:", token.access)
-            print ("Refresh Token:", token.refresh)
+        
+        print ("Access Token:", token.access)
+        print ("Refresh Token:", token.refresh)
         
         if (token):
             students = await api.getStudents(token.access)

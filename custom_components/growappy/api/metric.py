@@ -7,8 +7,12 @@ class Metric:
         self._data = data
         
     @property
-    def type(self):
+    def id(self):
         return self._data["metric_type"]
+
+    @property
+    def type(self):
+        return self._data["metric_type_detail"]["type"]
 
     @property
     def state(self):
@@ -17,3 +21,4 @@ class Metric:
     @property
     def start(self):
         return self._data["metric_start"]
+

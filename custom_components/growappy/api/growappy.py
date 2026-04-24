@@ -10,6 +10,7 @@ from .consts import (
     API_LOGIN_REFRESH_URL,
     API_LIST_STUDENTS_URL,
     API_DIARY_URL)
+from .exceptions import GrowappyApiException, GrowappyUnauthorizedException
 
 _LOGGER = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.DEBUG)
@@ -34,7 +35,7 @@ class GROWAPPY:
                     json = await res.json()
                     _LOGGER.debug("Done logging in.")
                     return Token(json)
-                raise Exception("Could not retrieve token for user, login failed")
+                raise GrowappyApiException(res.status, "Could not retrieve token for user, login failed")
         except aiohttp.ClientError as err:
             _LOGGER.error(err)
 
@@ -51,7 +52,7 @@ class GROWAPPY:
                     json = await res.json()
                     _LOGGER.debug("Done refreshing token.")
                     return Token(json)
-                raise Exception("Could not retrieve token for user, refresh failed")
+                raise GrowappyApiException(res.status, "Could not retrieve token for user, refresh failed")
         except aiohttp.ClientError as err:
             _LOGGER.error(err)
 
@@ -69,7 +70,9 @@ class GROWAPPY:
                     json = await res.json()
                     _LOGGER.debug("Done getting list of active students.")
                     return [ Student(student) for student in json['results'] ]
-                raise Exception("Could not retrieve students list from API")
+                if res.status == 401:
+                    raise GrowappyUnauthorizedException("Invalid access token")
+                raise GrowappyApiException(res.status, "Could not retrieve students list from API")
         except aiohttp.ClientError as err:
             _LOGGER.error(err)
 
@@ -87,6 +90,8 @@ class GROWAPPY:
                     json = await res.json()
                     _LOGGER.debug("Done getting diary for student {}.".format(studentId))
                     return [ Metric(metric) for metric in json['results'] ]
-                raise Exception("Could not retrieve diary for student {} from API".format(studentId))
+                if res.status == 401:
+                    raise GrowappyUnauthorizedException("Invalid access token")
+                raise GrowappyApiException(res.status, "Could not retrieve diary for student {} from API".format(studentId))
         except aiohttp.ClientError as err:
             _LOGGER.error(err)

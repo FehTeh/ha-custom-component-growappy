@@ -17,6 +17,7 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api.growappy import GROWAPPY
 from .api.student import Student
+from .api.exceptions import GrowappyUnauthorizedException
 from .const import DOMAIN, DEFAULT_ICON, ATTRIBUTION
 
 _LOGGER = logging.getLogger(__name__)
@@ -32,10 +33,18 @@ async def async_setup_entry(hass: HomeAssistant,
 
     config = config_entry.data
 
-    # TODO check token refresh
-    token = config["access_token"]
+    try:
+        students = await api.getStudents(config["access_token"])
+    except GrowappyUnauthorizedException:
+        token = await api.refreshToken(config["access_token"], config["refresh_token"]);
+        new_config = {**config, "access_token": token.access, "refresh_token": token.refresh}
+        hass.config_entries.async_update_entry(
+            config_entry, data=new_config
+        )
+        config = new_config
 
-    students = await api.getStudents(token)
+    students = await api.getStudents(config["access_token"])
+    
     sensors = [GrowappyStudentBinarySensor(student, api, config) for student in students]
     async_add_entities(sensors, update_before_add=True)
 
@@ -50,8 +59,8 @@ class GrowappyStudentBinarySensor(BinarySensorEntity):
         self._api = api
         self._config = config
         
-        self._attr_name = f"Student {self._student.name}"
-        self._attr_unique_id = f"{DOMAIN}-{self._student.id}-presence".lower()
+        self._attr_name = self._student.full_name
+        self._attr_unique_id = f"{DOMAIN}_{self._student.id}_presence"
         self._attr_device_class = BinarySensorDeviceClass.PRESENCE
         self._attr_icon = DEFAULT_ICON
         
@@ -63,6 +72,11 @@ class GrowappyStudentBinarySensor(BinarySensorEntity):
     def is_on(self) -> bool:
         """Returns True if the student is checked in."""
         return self._is_on
+
+    @property
+    def entity_id(self) -> str:
+        """Return the entity ID."""
+        return f"sensor.{self._attr_unique_id}"
 
     @property
     def available(self) -> bool:
@@ -83,18 +97,24 @@ class GrowappyStudentBinarySensor(BinarySensorEntity):
         try:
             today = datetime.now().strftime("%Y-%m-%d")
             
-            # TODO check token refresh
-            token = self._config["access_token"]
-            
-            metrics = await self._api.getDiary(token, self._student.id, today, today)
-            
+            try:
+                metrics = await self._api.getDiary(self._config["access_token"], self._student.id, today, today)
+            except GrowappyUnauthorizedException:
+                token = await self._api.refreshToken(self._config["access_token"], self._config["refresh_token"]);
+                new_config = {**self._config, "access_token": token.access, "refresh_token": token.refresh}
+                await self.hass.config_entries.async_update_entry(
+                    self._config_entry, data=new_config
+                )
+                self._config = new_config   
+
+            metrics = await self._api.getDiary(self._config["access_token"], self._student.id, today, today)
+
             if metrics and len(metrics) > 0:
-                # Pegamos o último elemento do array como você pediu
                 last_metric = metrics[-1]
                 
                 self._is_on = last_metric.state == 1
-                self._extra_attrs["last_event"] = last_metric.state
-                self._extra_attrs["last_update"] = last_metric.start
+                self._extra_attrs["event_type"] = last_metric.type
+                self._extra_attrs["event_date"] = last_metric.start
             else:
                 self._is_on = False
             
