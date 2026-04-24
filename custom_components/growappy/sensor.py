@@ -74,11 +74,6 @@ class GrowappyStudentBinarySensor(BinarySensorEntity):
         return self._is_on
 
     @property
-    def entity_id(self) -> str:
-        """Return the entity ID."""
-        return f"sensor.{self._attr_unique_id}"
-
-    @property
     def available(self) -> bool:
         return self._available
 
