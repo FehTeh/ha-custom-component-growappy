@@ -19,6 +19,7 @@ from .api.growappy import GROWAPPY
 from .api.student import Student
 from .api.exceptions import GrowappyUnauthorizedException
 from .const import DOMAIN, DEFAULT_ICON, ATTRIBUTION
+from .entity import GrowappyDevice
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -49,7 +50,7 @@ async def async_setup_entry(hass: HomeAssistant,
     async_add_entities(sensors, update_before_add=True)
 
 
-class GrowappyStudentBinarySensor(BinarySensorEntity):
+class GrowappyStudentBinarySensor(BinarySensorEntity, GrowappyDevice):
     """Representation of a student as a Binary Sensor (Presence)."""
 
     def __init__(self, student: Student, api: GROWAPPY, config: Any):
@@ -58,7 +59,9 @@ class GrowappyStudentBinarySensor(BinarySensorEntity):
         self._student = student
         self._api = api
         self._config = config
-        
+
+        GrowappyDevice.__init__(self, api, student)
+
         self._attr_name = self._student.full_name
         self._attr_unique_id = f"{DOMAIN}_{self._student.id}_presence"
         self._attr_device_class = BinarySensorDeviceClass.PRESENCE
