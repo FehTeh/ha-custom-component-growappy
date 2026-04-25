@@ -37,7 +37,7 @@ async def async_setup_entry(hass: HomeAssistant,
     try:
         students = await api.getStudents(config["access_token"])
     except GrowappyUnauthorizedException:
-        token = await api.refreshToken(config["access_token"], config["refresh_token"]);
+        token = await api.refreshToken(config["refresh_token"]);
         new_config = {**config, "access_token": token.access, "refresh_token": token.refresh}
         hass.config_entries.async_update_entry(
             config_entry, data=new_config
@@ -101,7 +101,7 @@ class GrowappyStudentBinarySensor(BinarySensorEntity, GrowappyDevice):
             try:
                 metrics = await self._api.getDiary(self._config["access_token"], self._student.id, today, today)
             except GrowappyUnauthorizedException:
-                token = await self._api.refreshToken(self._config["access_token"], self._config["refresh_token"]);
+                token = await self._api.refreshToken(self._config["refresh_token"]);
                 new_config = {**self._config, "access_token": token.access, "refresh_token": token.refresh}
                 await self.hass.config_entries.async_update_entry(
                     self._config_entry, data=new_config

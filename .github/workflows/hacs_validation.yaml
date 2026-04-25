@@ -17,3 +17,6 @@ jobs:
         uses: hacs/action@main
         with:
           category: integration
+
+      - name: HASSFest
+        uses: "home-assistant/actions/hassfest@master"

@@ -4,6 +4,13 @@
 
 A custom integration for [Home Assistant](https://www.home-assistant.io/) that tracks student attendance status from the Growappy platform.
 
+<table>
+  <tr>
+    <td align="center"><strong>Services</strong><br><img src="docs/services.png" alt="Services"></td>
+    <td align="center"><strong>Sensor</strong><br><img src="docs/sensor.png" alt="Sensor"></td>
+  </tr>
+<table>
+
 ## Features
 
 - **Binary Sensor:** Provides a real-time status of whether a student is currently checked into school.
