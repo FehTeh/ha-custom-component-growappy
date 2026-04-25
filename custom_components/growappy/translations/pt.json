@@ -3,15 +3,11 @@
     "config": {
         "step": {
             "user": {
-                "title": "Credenciais de Acesso",
-                "description": "Por favor, introduza o seu nome de utilizador e palavra passe.",
+                "title": "Conectar à conta Growappy",
+                "description": "Ligue-se usando sua conta Growappy.",
                 "data": {
                     "username": "Nome do Utilizador (Email)",
                     "password": "Palavra Passe"
-                },
-                "data_description": {
-                    "username": "O Nome do Utilizador (Email) usado para aceder a https://www.growappy.com/",
-                    "password": "O Palavra Passe usada para aceder a https://www.growappy.com/"
                 }
             }
         },
@@ -19,7 +15,7 @@
             "auth": "Credenciais inválidas."
         },
         "abort": {
-            "single_instance_allowed": "Só é permitida uma unica integração do growappy.",
+            "single_instance_allowed": "Só é permitida uma unica integração do Growappy.",
             "already_configured": "Esta integração já existe"
         }
     },
