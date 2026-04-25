@@ -18,7 +18,7 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from .api.growappy import GROWAPPY
 from .api.student import Student
 from .api.exceptions import GrowappyUnauthorizedException
-from .const import DOMAIN, DEFAULT_ICON, ATTRIBUTION
+from .const import DOMAIN, ATTRIBUTION
 from .entity import GrowappyDevice
 
 _LOGGER = logging.getLogger(__name__)
