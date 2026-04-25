@@ -61,13 +61,13 @@ class GrowappyStudentBinarySensor(BinarySensorEntity, GrowappyDevice):
         self._api = api
         self._config = config
 
-        self._attr_name = self._student.full_name
         self._attr_unique_id = f"{DOMAIN}_{self._student.id}_presence"
         self._attr_device_class = BinarySensorDeviceClass.PRESENCE
-        self._attr_icon = DEFAULT_ICON
+        self._attr_icon = "mdi:account-check"
         
         self._is_on = False
         self._available = True
+        self._translation_key = "presence"
         self._extra_attrs = {}
 
     @property
@@ -78,6 +78,10 @@ class GrowappyStudentBinarySensor(BinarySensorEntity, GrowappyDevice):
     @property
     def available(self) -> bool:
         return self._available
+
+    @property
+    def translation_key(self) -> str:
+        return self._translation_key
 
     @property
     def extra_state_attributes(self) -> Dict[str, Any]:

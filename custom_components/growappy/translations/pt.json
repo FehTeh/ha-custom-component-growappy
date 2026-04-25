@@ -22,5 +22,12 @@
             "single_instance_allowed": "Só é permitida uma unica integração do growappy.",
             "already_configured": "Esta integração já existe"
         }
+    },
+    "entity": {
+        "sensor": {
+            "presence": {
+                "name": "Check-in"
+            }
+        }
     }
 }
