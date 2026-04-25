@@ -3,6 +3,8 @@
 Configuration file for API testing.
 """
 
+#Rename this file to test_config.py and fill in your credentials to run test_api.py
+
 API_USERNAME = "your_username"
 API_PASSWORD = "your_password"
 
