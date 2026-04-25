@@ -1,0 +1,40 @@
+name: Version Check
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'custom_components/growappy/**'
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR Branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: pr
+
+      - name: Checkout Main Branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+
+      - name: Compare Versions
+        run: |
+          # Extract versions using jq
+          PR_VER=$(jq -r '.version' pr/custom_components/growappy/manifest.json)
+          MAIN_VER=$(jq -r '.version' main/custom_components/growappy/manifest.json)
+
+          echo "Version in Main: $MAIN_VER"
+          echo "Version in PR: $PR_VER"
+
+          if [ "$PR_VER" == "$MAIN_VER" ]; then
+            echo "::error::Version in manifest.json has not been incremented! ($PR_VER)"
+            exit 1
+          else
+            echo "Version check passed: $MAIN_VER -> $PR_VER"
+          fi
