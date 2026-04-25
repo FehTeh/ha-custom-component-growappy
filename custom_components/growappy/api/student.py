@@ -15,9 +15,30 @@ class Student:
         return self._data["name"]
 
     @property
+    def full_name(self):
+        return self._data["full_name"]
+
+    @property
     def status(self):
         return self._data["status"]
 
     @property
-    def full_name(self):
-        return self._data["full_name"]
+    def school_class(self):
+        try:
+            return self._data["school_class"]["name"]
+        except (KeyError, TypeError):
+            return None
+    
+    @property
+    def school_year(self):
+        try:
+            return self._data["school_class"]["school_year"]["name"]
+        except (KeyError, TypeError):
+            return None
+
+    @property
+    def school_name(self):
+        try:
+            return self._data["school_class"]["school_year"]["school"]["name"]
+        except (KeyError, TypeError):
+            return None

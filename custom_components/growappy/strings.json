@@ -22,5 +22,12 @@
             "single_instance_allowed": "Only a single configuration of growappy is allowed.",
             "already_configured": "Integration is already configured"
         }
+    },
+    "entity": {
+        "sensor": {
+            "presence": {
+                "name": "Check-in"
+            }
+        }
     }
 }

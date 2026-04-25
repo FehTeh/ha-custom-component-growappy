@@ -28,6 +28,19 @@ class GrowappyDevice(Entity):
                     f"{student.id}",
                 )
             },
+            model=self._model_name(student),
             manufacturer=DOMAIN,
             name=student.full_name,
         )
+
+    def _model_name(self, student: Student) -> str:
+        try:
+            # Get your values safely
+            x = student.school_name
+            y = student.school_year
+            z = student.school_class
+
+            # Join only the truthy values
+            return " | ".join(part for part in [x, y, z] if part)
+        except (KeyError, TypeError):
+            return "Unknown Class"
