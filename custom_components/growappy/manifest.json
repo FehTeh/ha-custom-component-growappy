@@ -1,12 +1,12 @@
 {
-    "version": "1.0.8",
     "domain": "growappy",
     "name": "Growappy",
-    "documentation": "https://github.com/fehteh/ha-custom-component-growappy/blob/main/README.md",
-    "issue_tracker": "https://github.com/fehteh/ha-custom-component-growappy/issues",
-    "iot_class": "cloud_polling",
-    "requirements": [],    
-    "dependencies": [],
     "codeowners": ["@fehteh"],
-    "config_flow": true
+    "config_flow": true,
+    "dependencies": [],
+    "documentation": "https://github.com/fehteh/ha-custom-component-growappy/blob/main/README.md",
+    "iot_class": "cloud_polling",
+    "issue_tracker": "https://github.com/fehteh/ha-custom-component-growappy/issues",
+    "requirements": [],    
+    "version": "1.0.8"
 }
