@@ -55,12 +55,11 @@ class GrowappyStudentBinarySensor(BinarySensorEntity, GrowappyDevice):
 
     def __init__(self, student: Student, api: GROWAPPY, config: Any):
         """Initialize the binary sensor."""
-        super().__init__()
+        GrowappyDevice.__init__(self, api, student)
+
         self._student = student
         self._api = api
         self._config = config
-
-        GrowappyDevice.__init__(self, api, student)
 
         self._attr_name = self._student.full_name
         self._attr_unique_id = f"{DOMAIN}_{self._student.id}_presence"
