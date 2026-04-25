@@ -21,7 +21,10 @@ async def main():
 
         if (test_config.API_ACCESS_TOKEN and test_config.API_REFRESH_TOKEN):
             print ("Using existing tokens from config...")
-            token = await api.refreshToken(test_config.API_ACCESS_TOKEN, test_config.API_REFRESH_TOKEN)
+            token = Token({
+                "access": test_config.API_ACCESS_TOKEN,
+                "refresh": test_config.API_REFRESH_TOKEN
+            })
         else:
             username = test_config.API_USERNAME
             password = test_config.API_PASSWORD
