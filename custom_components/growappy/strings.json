@@ -1,17 +1,13 @@
 {
-    "title": "Growappy integration",
+    "title": "Growappy",
     "config": {
         "step": {
             "user": {
-                "title": "Add Credentials",
-                "description": "Please type your credentials",
+                "title": "Connect to Growappy account",
+                "description": "Connect using your Growappy account.",
                 "data": {
                     "username": "Username (Email)",
                     "password": "Password"
-                },
-                "data_description": {
-                    "username": "The username (email) used to login in https://www.growappy.com/",
-                    "password": "The password used to login in https://www.growappy.com/"
                 }
             }
         },
@@ -19,7 +15,7 @@
             "auth": "Invalid credentials."
         },
         "abort": {
-            "single_instance_allowed": "Only a single configuration of growappy is allowed.",
+            "single_instance_allowed": "Only a single configuration of Growappy is allowed.",
             "already_configured": "Integration is already configured"
         }
     },
