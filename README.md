@@ -47,7 +47,7 @@ Once the integration is installed and Home Assistant has restarted, you can conf
 ## API Documentation
 
 This integration interacts with the official Growappy API. For more technical details on the data structures and endpoints, refer to the official documentation:
-[https://api.growappy.com/v2/api/doc](https://api.growappy.com/v2/api/doc)
+[https://api.growappy.com/v2/api/docs](https://api.growappy.com/v2/api/docs)
 
 ## Disclaimer
 
