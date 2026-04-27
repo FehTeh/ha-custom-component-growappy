@@ -37,29 +37,34 @@ async def async_setup_entry(hass: HomeAssistant,
     try:
         students = await api.getStudents(config["access_token"])
     except GrowappyUnauthorizedException:
-        token = await api.refreshToken(config["refresh_token"]);
+        try:
+            token = await api.refreshToken(config["refresh_token"]);
+        except Exception as err:
+            _LOGGER.error("Failed to refresh token: %s", err)
+            raise ConfigEntryAuthFailed("Failed to refresh token. Re-auth") from err
+
         new_config = {**config, "access_token": token.access, "refresh_token": token.refresh}
         hass.config_entries.async_update_entry(
             config_entry, data=new_config
         )
         config = new_config
 
-    students = await api.getStudents(config["access_token"])
-    
-    sensors = [GrowappyStudentBinarySensor(student, api, config) for student in students]
+        students = await api.getStudents(config["access_token"])
+
+    sensors = [GrowappyStudentBinarySensor(student, api, config_entry) for student in students]
     async_add_entities(sensors, update_before_add=True)
 
 
 class GrowappyStudentBinarySensor(BinarySensorEntity, GrowappyDevice):
     """Representation of a student as a Binary Sensor (Presence)."""
 
-    def __init__(self, student: Student, api: GROWAPPY, config: Any):
+    def __init__(self, student: Student, api: GROWAPPY, config_entry: ConfigEntry):
         """Initialize the binary sensor."""
         GrowappyDevice.__init__(self, api, student)
 
         self._student = student
         self._api = api
-        self._config = config
+        self._config = config_entry.data
 
         self._attr_unique_id = f"{DOMAIN}_{self._student.id}_presence"
         self._attr_device_class = BinarySensorDeviceClass.PRESENCE
@@ -101,14 +106,19 @@ class GrowappyStudentBinarySensor(BinarySensorEntity, GrowappyDevice):
             try:
                 metrics = await self._api.getDiary(self._config["access_token"], self._student.id, today, today)
             except GrowappyUnauthorizedException:
-                token = await self._api.refreshToken(self._config["refresh_token"]);
+                try:
+                    token = await self._api.refreshToken(self._config["refresh_token"]);
+                except Exception as err:
+                    _LOGGER.error("Failed to refresh token: %s", err)
+                    raise ConfigEntryAuthFailed("Failed to refresh token. Re-auth") from err
+                
                 new_config = {**self._config, "access_token": token.access, "refresh_token": token.refresh}
                 await self.hass.config_entries.async_update_entry(
-                    self._config_entry, data=new_config
+                    self.config_entry, data=new_config
                 )
                 self._config = new_config   
 
-            metrics = await self._api.getDiary(self._config["access_token"], self._student.id, today, today)
+                metrics = await self._api.getDiary(self._config["access_token"], self._student.id, today, today)
 
             if metrics and len(metrics) > 0:
                 last_metric = metrics[-1]
