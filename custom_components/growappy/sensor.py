@@ -31,7 +31,6 @@ async def async_setup_entry(hass: HomeAssistant,
     """Setup binary sensor platform."""
     session = async_get_clientsession(hass, True)
     api = GROWAPPY(session)
-
     config = config_entry.data
 
     try:
@@ -64,7 +63,7 @@ class GrowappyStudentBinarySensor(BinarySensorEntity, GrowappyDevice):
 
         self._student = student
         self._api = api
-        self._config = config_entry.data
+        self._config_entry = config_entry
 
         self._attr_unique_id = f"{DOMAIN}_{self._student.id}_presence"
         self._attr_device_class = BinarySensorDeviceClass.PRESENCE
@@ -102,23 +101,24 @@ class GrowappyStudentBinarySensor(BinarySensorEntity, GrowappyDevice):
         """Fetches the diary data and sets the presence status."""
         try:
             today = datetime.now().strftime("%Y-%m-%d")
-            
+            config = self._config_entry.data
+
             try:
-                metrics = await self._api.getDiary(self._config["access_token"], self._student.id, today, today)
+                metrics = await self._api.getDiary(config["access_token"], self._student.id, today, today)
             except GrowappyUnauthorizedException:
                 try:
-                    token = await self._api.refreshToken(self._config["refresh_token"]);
+                    token = await self._api.refreshToken(config["refresh_token"]);
                 except Exception as err:
                     _LOGGER.error("Failed to refresh token: %s", err)
                     raise ConfigEntryAuthFailed("Failed to refresh token. Re-auth") from err
                 
-                new_config = {**self._config, "access_token": token.access, "refresh_token": token.refresh}
+                new_config = {**config, "access_token": token.access, "refresh_token": token.refresh}
                 await self.hass.config_entries.async_update_entry(
-                    self.config_entry, data=new_config
+                    self._config_entry, data=new_config
                 )
-                self._config = new_config   
+                config = new_config   
 
-                metrics = await self._api.getDiary(self._config["access_token"], self._student.id, today, today)
+                metrics = await self._api.getDiary(config["access_token"], self._student.id, today, today)
 
             if metrics and len(metrics) > 0:
                 last_metric = metrics[-1]
