@@ -19,6 +19,10 @@ A custom integration for [Home Assistant](https://www.home-assistant.io/) that t
   - Provides real-time location status: at_school or away.
   - Integrates seamlessly with Home Assistant Person entities for map visualization.
 
+- **Data Coordinator:** Uses a centralized polling system to fetch data for all students in a single request, optimizing network traffic and API usage.
+
+- **Automatic Re-authentication:** Detects expired tokens and prompts for re-authentication directly through the Home Assistant UI.
+
 ## Installation
 
 ### Method 1: HACS (Recommended)
