@@ -56,6 +56,10 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
+    async def async_step_reauth(self, user_input=None):
+        """Handle re-auth if credentials expire."""
+        return await self.async_step_user()
+
     async def _test_credentials(self, user_input):
         """Return token if credentials is valid."""
         session = async_get_clientsession(self.hass, True)

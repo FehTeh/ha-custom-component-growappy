@@ -20,9 +20,12 @@
         }
     },
     "entity": {
-        "sensor": {
-            "presence": {
-                "name": "Check-in"
+        "device_tracker": {
+            "student_presence": {
+                "state": {
+                    "at_school": "Escola",
+                    "not_home": "Ausente"
+                }
             }
         }
     }

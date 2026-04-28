@@ -1,35 +1,53 @@
-"""The growappy integration."""
+"""The Growappy integration."""
 from __future__ import annotations
 import logging
 
-from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.helpers.typing import ConfigType
+from homeassistant.const import Platform
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
+from .api.growappy import GROWAPPY
+from .coordinator import GrowappyUpdateCoordinator
 from .const import DOMAIN
 
-__version__ = "1.0.0"
-
 _LOGGER = logging.getLogger(__name__)
-_LOGGER.setLevel(logging.DEBUG)
 
-PLATFORMS: list[str] = ["sensor"]
+PLATFORMS: list[Platform] = [
+    Platform.DEVICE_TRACKER
+]
 
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Set up Growappy from a config entry."""
+    
+    # 1. Initialize the API client using HA's shared session
+    session = async_get_clientsession(hass)
+    api = GROWAPPY(session)
+    
+    # 2. Create the Data Coordinator
+    coordinator = GrowappyUpdateCoordinator(hass, api, entry)
+    
+    # 3. Trigger the first data refresh
+    # This ensures we have student data before loading platforms
+    await coordinator.async_config_entry_first_refresh()
 
-async def async_setup(hass: HomeAssistant, config: ConfigType):
-    # Return boolean to indicate that initialization was successful.
-    _LOGGER.debug("async_setup")
-    return True
+    # 4. Store the coordinator for platforms to access
+    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Set up the component from a config entry."""
-    hass.data.setdefault(DOMAIN, {})    
+    # 5. Set up all defined platforms
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
-    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    # Unload all platforms
+    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    
+    # Clean up stored data
+    if unload_ok:
+        hass.data[DOMAIN].pop(entry.entry_id)
+
+    return unload_ok
 
 async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Reload config entry."""

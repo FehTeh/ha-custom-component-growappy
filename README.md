@@ -13,9 +13,11 @@ A custom integration for [Home Assistant](https://www.home-assistant.io/) that t
 
 ## Features
 
-- **Binary Sensor:** Provides a real-time status of whether a student is currently checked into school.
-  - `on`: Student is checked in.
-  - `off`: Student is checked out / not in school.
+- **Device Tracker (Presence):** Represents each student as a trackable entity.
+
+  - Automatically identifies if a student is at a specific Zone (e.g., "School").
+  - Provides real-time location status: at_school or away.
+  - Integrates seamlessly with Home Assistant Person entities for map visualization.
 
 ## Installation
 
