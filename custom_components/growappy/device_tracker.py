@@ -36,7 +36,7 @@ class GrowappyStudentTracker(CoordinatorEntity, GrowappyDevice, TrackerEntity):
     @property
     def name(self) -> str:
         """Return the name of the student."""
-        return self._student.name
+        return self._student.full_name
 
     @property
     def translation_key(self) -> str:
