@@ -113,7 +113,7 @@ class GrowappyStudentBinarySensor(BinarySensorEntity, GrowappyDevice):
                     raise ConfigEntryAuthFailed("Failed to refresh token. Re-auth") from err
                 
                 new_config = {**config, "access_token": token.access, "refresh_token": token.refresh}
-                await self.hass.config_entries.async_update_entry(
+                self.hass.config_entries.async_update_entry(
                     self._config_entry, data=new_config
                 )
                 config = new_config   
