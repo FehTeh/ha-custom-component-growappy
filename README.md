@@ -1,6 +1,7 @@
-# Growappy - Custom Component for Home Assistant
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/hacs/integration)
+[![GitHub release](https://img.shields.io/github/release/FehTeh/ha-custom-component-growappy.svg)](https://github.com/FehTeh/ha-custom-component-growappy/releases/)
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
+# Growappy - Custom Component for Home Assistant
 
 A custom integration for [Home Assistant](https://www.home-assistant.io/) that tracks student attendance status from the Growappy platform.
 
