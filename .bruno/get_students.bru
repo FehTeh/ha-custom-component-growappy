@@ -1,0 +1,20 @@
+meta {
+  name: Get Students
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v2/user/students?limit=10000&status=1
+  body: none
+  auth: bearer
+}
+
+params:query {
+  limit: 10000
+  status: 1
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
