@@ -1,0 +1,21 @@
+meta {
+  name: Get Diary
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/v2/user/students/evaluation/diary?startDate=2025-05-08&endDate=2025-05-08&studentId=1
+  body: none
+  auth: bearer
+}
+
+params:query {
+  startDate: 2025-05-08
+  endDate: 2025-05-08
+  studentId: 1
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
